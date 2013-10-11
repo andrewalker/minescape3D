@@ -12,10 +12,9 @@
 void minescapeDisplay();
 void minescapeReshape(GLsizei w, GLsizei h);
 void minescapeSetup();
-int loadPlyFile(const char *filename);
+int loadPlyFile();
 
 static int face_cb(p_ply_argument argument);
 static int vertex_cb(p_ply_argument argument);
-static int normal_cb(p_ply_argument argument);
 
 #endif
