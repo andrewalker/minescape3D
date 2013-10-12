@@ -4,6 +4,9 @@
 #include <rply/rply.h>
 #include "minescape.h"
 
+// FIXME
+// talvez parte destas poderiam ser constantes em minescape.h
+
 double current_vertex[3];
 int vertex_count;
 int face_count;
@@ -106,10 +109,7 @@ static int face_cb(p_ply_argument argument) {
 	return 1;
 }
 
-static int normal(p_ply_argument argument) { return 1; }
-
 int loadPlyFile() {
-
 	p_ply ply = ply_open(filename, NULL, 0, NULL);
 
 	if (!ply) return -1;
@@ -119,9 +119,9 @@ int loadPlyFile() {
 	ply_set_read_cb(ply, "vertex", "y", vertex_cb, NULL, 1);
 	ply_set_read_cb(ply, "vertex", "z", vertex_cb, NULL, 2);
 
-	ply_set_read_cb(ply, "vertex", "nx", normal, NULL, 0);
-	ply_set_read_cb(ply, "vertex", "ny", normal, NULL, 0);
-	ply_set_read_cb(ply, "vertex", "nz", normal, NULL, 0);
+	ply_set_read_cb(ply, "vertex", "nx", NULL, NULL, 0);
+	ply_set_read_cb(ply, "vertex", "ny", NULL, NULL, 0);
+	ply_set_read_cb(ply, "vertex", "nz", NULL, NULL, 0);
 
 	face_count = ply_set_read_cb(ply, "face", "vertex_indices", face_cb, NULL, 0);
 
@@ -136,17 +136,8 @@ int loadPlyFile() {
 }
 
 void minescapeTimer(int value) {
-
-	//if(z_rotation == 1)
-	//{
-		angle += 2;
-		z_rotation = 0;
-	/*}
-	else if(z_rotation == -1)
-	{
-		angle -= 1;
-		z_rotation = 0;
-	}*/
+	angle += 2;
+	z_rotation = 0;
 
 	glutPostRedisplay();
 	glutTimerFunc(TIMER_DELAY, minescapeTimer, 1);
