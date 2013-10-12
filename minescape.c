@@ -4,8 +4,6 @@
 #include <rply/rply.h>
 #include "minescape.h"
 
-#define TIMER_DELAY 30
-
 double current_vertex[3];
 int vertex_count;
 int face_count;
@@ -15,24 +13,26 @@ int v = 0;
 int f = -1;
 char filename[100];
 
-float angle      = 0;
+float trans_x = 0.0f;
+float trans_y = 0.0f;
+float trans_z = 0.0f;
+
+int angle        = 0;
 float x_vector   = 0;
 float y_vector   = 0;
 float z_vector   = 0;
-float angle_step = 1;
-float x_step     = 0.8;
-float y_step     = 0.3;
-float z_step     = 0.8;
+int angle_step   = 1;
+float crt_angle  = 0;
+int z_rotation   = 0;
 
 void minescapeDisplay() {
 	int i, j;
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	glRotatef(((int)angle) % 360, x_vector, y_vector, z_vector);
-	glScalef(0.3f, 0.3f, 0.3f);
+	glPushMatrix();
+	
+	glRotatef(angle, 0.f, 0.f, 1.f);
+	glTranslatef(trans_x, trans_y, trans_z);
 
 	for (i = 0; i < face_count; i++) {
 		glBegin(GL_POLYGON);
@@ -43,37 +43,26 @@ void minescapeDisplay() {
 		glEnd();
 	}
 
+	glPopMatrix();
 	glutSwapBuffers();
 }
 
-void minescapeReshape(GLsizei w, GLsizei h) {
-	float windowHeight, windowWidth;
+void minescapeKeyboard(int key, int x, int y) {
+	switch (key) {
+		case GLUT_KEY_UP:    trans_y += -1.0f;  break;
+		case GLUT_KEY_DOWN:  trans_y += 1.0f; break;
+		case GLUT_KEY_RIGHT: trans_x += 1.0f;  break;
+		case GLUT_KEY_LEFT:  trans_x += -1.0f; break;
+	}
 
-     // Evita a divisao por zero
-     if(h == 0) h = 1;
-
-     // Especifica as dimensões da Viewport
-     glViewport(0, 0, w, h);
-
-     // Inicializa o sistema de coordenadas
-     glMatrixMode(GL_PROJECTION);
-     glLoadIdentity();
-
-     // Estabelece a janela de seleção (left, right, bottom, top)
-     if (w <= h)  {
-		windowHeight = 250.0f*h/w;
-		windowWidth = 250.0f;
-     }
-     else  {
-		windowWidth = 250.0f*w/h;
-		windowHeight = 250.0f;
-     }
-
-     gluOrtho2D(0.0f, windowWidth, 0.0f, windowHeight);
+	glutPostRedisplay();
 }
 
 void minescapeSetup() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glScalef(0.1f, 0.1f, 0.1f);
 
 	loadPlyFile();
 
@@ -147,12 +136,17 @@ int loadPlyFile() {
 }
 
 void minescapeTimer(int value) {
-	angle += angle_step;
-	x_vector += x_step;
-	y_vector += y_step;
-	z_vector += z_step;
-
-	glRotatef(((int)angle) % 360, x_vector, y_vector, z_vector);
+	
+	//if(z_rotation == 1)
+	//{
+		angle += 2;
+		z_rotation = 0;
+	/*}
+	else if(z_rotation == -1)
+	{
+		angle -= 1;
+		z_rotation = 0;
+	}*/
 
 	glutPostRedisplay();
 	glutTimerFunc(TIMER_DELAY, minescapeTimer, 1);
@@ -169,7 +163,7 @@ int main(int argc, char *argv[]) {
 	glutCreateWindow(WINDOW_TITLE);
 
 	glutDisplayFunc(minescapeDisplay);
-//	glutReshapeFunc(minescapeReshape);
+	glutSpecialFunc(minescapeKeyboard);
 	glutTimerFunc(TIMER_DELAY, minescapeTimer, 1);
 
 	minescapeSetup();
