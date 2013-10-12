@@ -12,7 +12,6 @@
 #define TIMER_DELAY 30
 
 void minescapeDisplay();
-void minescapeReshape(GLsizei w, GLsizei h);
 void minescapeSetup();
 int loadPlyFile();
 

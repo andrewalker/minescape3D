@@ -30,7 +30,7 @@ void minescapeDisplay() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glPushMatrix();
-	
+
 	glRotatef(angle, 0.f, 0.f, 1.f);
 	glTranslatef(trans_x, trans_y, trans_z);
 
@@ -136,7 +136,7 @@ int loadPlyFile() {
 }
 
 void minescapeTimer(int value) {
-	
+
 	//if(z_rotation == 1)
 	//{
 		angle += 2;
@@ -153,6 +153,11 @@ void minescapeTimer(int value) {
 }
 
 int main(int argc, char *argv[]) {
+	if (argc == 1) {
+		fprintf(stderr, "Uso: ./minespace <caminho para arquivo.ply>\n");
+		return 1;
+	}
+
 	strcpy(filename, argv[1]);
 
 	glutInit(&argc, argv);
