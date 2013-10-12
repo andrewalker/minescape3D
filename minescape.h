@@ -1,13 +1,15 @@
 #ifndef MINESCAPE_H
 #define MINESCAPE_H
 
-#define WINDOW_SIZE_X 400
-#define WINDOW_SIZE_Y 350
+#define WINDOW_SIZE_X 800
+#define WINDOW_SIZE_Y 600
 
 #define WINDOW_POSITION_X 10
 #define WINDOW_POSITION_Y 10
 
-#define WINDOW_TITLE "Minescape"
+#define WINDOW_TITLE "Minescape3D"
+
+#define TIMER_DELAY 30
 
 void minescapeDisplay();
 void minescapeReshape(GLsizei w, GLsizei h);
