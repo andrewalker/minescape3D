@@ -1,11 +1,8 @@
 CC="gcc"
 
-all: rotate keyboard
+default: minespace
 
-keyboard:
-	$(CC) -Wall -lGL -lGLU -lglut -lrply -o keyboard minescape-keyboard.c
-
-rotate:
+minespace:
 	$(CC) -Wall -lGL -lGLU -lglut -lrply -o minescape minescape.c
 
 clean:
